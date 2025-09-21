@@ -70,6 +70,7 @@ jobs:
           cp ../pyproject.toml ./
           cp -r ../src ./
           cp ../main.py ./
+          cp -r ../.streamlit ./
 
           # Commit and push changes
           git add .
