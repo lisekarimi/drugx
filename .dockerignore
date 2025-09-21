@@ -1,0 +1,83 @@
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+
+# Virtual environments
+.env
+.venv/
+venv/
+env/
+.Python
+
+# Build and distribution
+dist/
+build/
+*.tar.gz
+*.whl
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.tox/
+.nox/
+htmlcov/
+.cache
+
+# Development tools and configs
+.vscode/
+.idea/
+.python-version
+.pre-commit-config.yaml
+Makefile
+
+# Documentation
+*.md
+README*
+docs/
+LICENSE*
+
+# Development and testing directories
+tests/
+scripts/
+monitoring/
+examples/
+
+# Data and temporary files
+data/
+temp/
+tmp/
+*.tmp
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Assets (if not needed in production)
+assets/
+static/images/

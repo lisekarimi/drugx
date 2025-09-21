@@ -1,0 +1,548 @@
+/* DrugX - Modern Medical UI Redesign */
+
+/* CSS Variables for consistent theming */
+:root {
+  --primary-blue: #2563eb;
+  --primary-blue-light: #3b82f6;
+  --primary-blue-dark: #1d4ed8;
+  --secondary-teal: #0d9488;
+  --accent-purple: #7c3aed;
+
+  --success-green: #059669;
+  --warning-amber: #d97706;
+  --danger-red: #dc2626;
+  --info-blue: #0284c7;
+
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-400: #94a3b8;
+  --neutral-500: #64748b;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-800: #1e293b;
+  --neutral-900: #0f172a;
+
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  --border-radius-sm: 6px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+}
+
+/* Base app styling with improved background */
+div[data-testid="stAppViewContainer"] {
+  background:
+    radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(13, 148, 136, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, var(--neutral-900) 0%, var(--neutral-800) 100%) !important;
+  min-height: 100vh !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Main container with glassmorphism effect */
+section.main > div,
+div[data-testid="block-container"] {
+  max-width: 720px !important;
+  margin: 2rem auto !important;
+  padding: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Create a proper card container */
+section.main > div::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 100%) !important;
+  border-radius: var(--border-radius-xl) !important;
+  border: 1px solid var(--glass-border) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow:
+    var(--shadow-xl),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  z-index: -1;
+}
+
+section.main > div {
+  position: relative;
+  padding: var(--spacing-2xl) !important;
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Typography system */
+* {
+  color: var(--neutral-50) !important;
+}
+
+/* Main header with improved gradient */
+.main-header {
+  color: transparent !important;
+  background: linear-gradient(135deg,
+    var(--neutral-50) 0%,
+    var(--primary-blue-light) 40%,
+    var(--secondary-teal) 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-align: center !important;
+  font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+  font-weight: 800 !important;
+  margin-bottom: var(--spacing-sm) !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.1 !important;
+}
+
+/* Subtitle */
+.sub-header {
+  color: var(--neutral-300) !important;
+  text-align: center !important;
+  font-size: 1.25rem !important;
+  font-weight: 400 !important;
+  margin-bottom: var(--spacing-xl) !important;
+  opacity: 0.9 !important;
+}
+
+/* Improved warning box */
+.warning-box {
+  background: linear-gradient(135deg,
+    rgba(217, 119, 6, 0.1) 0%,
+    rgba(245, 158, 11, 0.05) 100%) !important;
+  border: 1px solid rgba(217, 119, 6, 0.3) !important;
+  border-radius: var(--border-radius-md) !important;
+  padding: var(--spacing-lg) !important;
+  margin: var(--spacing-xl) 0 !important;
+  backdrop-filter: blur(10px) !important;
+  position: relative !important;
+}
+
+.warning-box::before {
+  content: '⚠️' !important;
+  position: absolute !important;
+  left: var(--spacing-lg) !important;
+  top: var(--spacing-lg) !important;
+  font-size: 1.25rem !important;
+}
+
+.warning-box {
+  padding-left: 3.5rem !important;
+}
+
+.warning-box strong {
+  color: #f59e0b !important;
+  font-weight: 600 !important;
+}
+
+/* Section headers */
+h2, h3 {
+  color: var(--neutral-100) !important;
+  font-weight: 600 !important;
+  font-size: 1.5rem !important;
+  margin-bottom: var(--spacing-lg) !important;
+  position: relative !important;
+}
+
+h2::after, h3::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -0.5rem !important;
+  left: 0 !important;
+  width: 3rem !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-teal) 100%) !important;
+  border-radius: 1px !important;
+}
+
+/* Input fields with modern styling */
+.stTextInput > div > div > input {
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: var(--border-radius-md) !important;
+  color: var(--neutral-50) !important;
+  font-size: 1rem !important;
+  padding: 1rem 1.25rem !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-weight: 400 !important;
+  height: auto !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.stTextInput > div > div > input:focus {
+  border-color: var(--primary-blue) !important;
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1),
+    var(--shadow-md) !important;
+  outline: none !important;
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 100%) !important;
+}
+
+.stTextInput > div > div > input::placeholder {
+  color: var(--neutral-400) !important;
+  opacity: 0.8 !important;
+}
+
+/* Input labels */
+.stTextInput > label {
+  color: var(--neutral-200) !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: var(--spacing-sm) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Button system with states */
+.stButton > button {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 1rem 2rem !important;
+  border-radius: var(--border-radius-md) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.stButton > button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.stButton > button:hover::before {
+  left: 100% !important;
+}
+
+.stButton > button:hover {
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.stButton > button:active {
+  transform: translateY(0) !important;
+}
+
+/* Primary button variant */
+.stButton > button[kind="primary"] {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-purple) 100%) !important;
+  font-size: 1rem !important;
+  padding: 1.25rem 2.5rem !important;
+}
+
+/* Secondary button (Add Drug, Clear) */
+.stButton > button[kind="secondary"],
+.stButton button:not([kind]) {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--neutral-200) !important;
+}
+
+.stButton > button[kind="secondary"]:hover {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.08) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Remove button styling */
+button[title*="Remove"] {
+  background: linear-gradient(135deg, var(--danger-red) 0%, #ef4444 100%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: var(--border-radius-sm) !important;
+  padding: 0 !important;
+  font-size: 1.125rem !important;
+}
+
+/* Risk level cards with modern styling */
+.risk-high {
+  background: linear-gradient(135deg,
+    rgba(220, 38, 38, 0.15) 0%,
+    rgba(185, 28, 28, 0.1) 100%) !important;
+  border: 1px solid rgba(220, 38, 38, 0.3) !important;
+  border-left: 4px solid var(--danger-red) !important;
+  padding: var(--spacing-xs) !important;
+  margin: var(--spacing-xs) 0 !important;
+  border-radius: var(--border-radius-md) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: var(--shadow-lg) !important;
+  position: relative !important;
+}
+
+.risk-moderate {
+  background: linear-gradient(135deg,
+    rgba(217, 119, 6, 0.15) 0%,
+    rgba(180, 83, 9, 0.1) 100%) !important;
+  border: 1px solid rgba(217, 119, 6, 0.3) !important;
+  border-left: 4px solid var(--warning-amber) !important;
+  padding: var(--spacing-xs) !important;
+  margin: var(--spacing-xs) 0 !important;
+  border-radius: var(--border-radius-md) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.risk-low {
+  background: linear-gradient(135deg,
+    rgba(2, 132, 199, 0.15) 0%,
+    rgba(3, 105, 161, 0.1) 100%) !important;
+  border: 1px solid rgba(2, 132, 199, 0.3) !important;
+  border-left: 4px solid var(--info-blue) !important;
+  padding: var(--spacing-xs) !important;
+  margin: var(--spacing-xs) 0 !important;
+  border-radius: var(--border-radius-md) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.risk-safe {
+  background: linear-gradient(135deg,
+    rgba(5, 150, 105, 0.15) 0%,
+    rgba(4, 120, 87, 0.1) 100%) !important;
+  border: 1px solid rgba(5, 150, 105, 0.3) !important;
+  border-left: 4px solid var(--success-green) !important;
+  padding: var(--spacing-xs) !important;
+  margin: var(--spacing-xs) 0 !important;
+  border-radius: var(--border-radius-md) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* Progress bar */
+.stProgress > div > div > div {
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-teal) 100%) !important;
+  border-radius: var(--border-radius-sm) !important;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.3) !important;
+}
+
+.stProgress > div > div {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: var(--border-radius-sm) !important;
+}
+
+/* Expanders */
+.streamlit-expanderHeader {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: var(--border-radius-md) !important;
+  font-weight: 500 !important;
+  color: var(--neutral-100) !important;
+  padding: var(--spacing-lg) !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  transition: all 0.2s ease !important;
+}
+
+.streamlit-expanderHeader:hover {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.08) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.streamlit-expanderContent {
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.01) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-top: none !important;
+  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* JSON viewer */
+.stJson {
+  background: linear-gradient(145deg,
+    rgba(15, 23, 42, 0.8) 0%,
+    rgba(30, 41, 59, 0.6) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: var(--border-radius-md) !important;
+  color: var(--neutral-100) !important;
+  font-size: 0.8rem !important;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+/* Columns for layout */
+div[data-testid="column"] {
+  padding: 0 var(--spacing-xs) !important;
+}
+
+div[data-testid="column"]:first-child {
+  padding-left: 0 !important;
+}
+
+div[data-testid="column"]:last-child {
+  padding-right: 0 !important;
+}
+
+/* Footer */
+hr {
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%) !important;
+  margin: var(--spacing-2xl) 0 var(--spacing-xl) 0 !important;
+}
+
+/* Footer content */
+.footer-content {
+  text-align: center !important;
+}
+
+.footer-description {
+  color: var(--neutral-400) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  margin: var(--spacing-sm) 0 !important;
+}
+
+.footer-disclaimer, .footer-version {
+  color: var(--neutral-500) !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  margin: var(--spacing-sm) 0 !important;
+}
+
+.footer-links a {
+  color: var(--neutral-300) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  margin: 0 0.5rem !important;
+  transition: all 0.3s ease !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: var(--border-radius-sm) !important;
+}
+
+.footer-links a:hover {
+  color: var(--primary-blue-light) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  text-decoration: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  transform: translateY(-2px) !important;
+}
+
+.footer-links {
+  text-align: center !important;
+  margin: var(--spacing-md) 0 !important;
+  font-size: 0.9rem !important;
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+  section.main > div,
+  div[data-testid="block-container"] {
+    margin: var(--spacing-md) !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+
+  section.main > div {
+    padding: var(--spacing-xl) !important;
+    border-radius: var(--border-radius-lg) !important;
+  }
+
+  .main-header {
+    font-size: 2.5rem !important;
+  }
+
+  .sub-header {
+    font-size: 1.125rem !important;
+  }
+
+  .stButton > button {
+    padding: 0.875rem 1.5rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .stTextInput > div > div > input {
+    padding: 0.875rem 1rem !important;
+  }
+}
+
+/* Loading states */
+.stSpinner > div {
+  border-color: var(--primary-blue) transparent transparent transparent !important;
+}
+
+/* Toast notifications */
+.stToast {
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: var(--border-radius-md) !important;
+  color: var(--neutral-100) !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-teal) 100%) !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%) !important;
+}

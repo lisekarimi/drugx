@@ -1,0 +1,45 @@
+[project]
+name = "drugx"
+version = "0.1.0"
+description = "AI Platform for Drug Safety"
+readme = "README.md"
+requires-python = ">=3.11, <3.12"
+dependencies = [
+   "openai>=1.0.0",
+   "anthropic>=0.7.0",
+   "streamlit>=1.28.0",
+   "httpx>=0.25.0", # For async HTTP requests to APIs
+   "pydantic>=2.0.0", # Data validation
+   "python-dotenv>=1.0.0", # Environment variables
+   "asyncio-throttle>=1.0.0", # Rate limiting for APIs
+   "tenacity>=8.0.0", # Retry logic for API failures
+   "asyncpg>=0.30.0",
+   "resend>=0.6.0", # Email notifications for monitoring
+]
+
+[tool.ruff]
+exclude = [
+  "**/notebooks/",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort (import sorting)
+    "B",    # flake8-bugbear (common bugs)
+    "UP",   # pyupgrade (modern Python)
+    "D",    # pydocstyle (docstrings)
+]
+
+ignore = [
+    "E501",  # line too long
+    "D100",  # missing docstring in public module
+    "D104",  # missing docstring in public package
+    "D203",  # incorrect-blank-line-before-class
+    "D213",  # multi-line-summary-second-line
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

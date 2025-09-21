@@ -1,0 +1,65 @@
+services:
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    container_name: drugx-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    networks:
+      - drugx-network
+
+  app:
+    build: .
+    container_name: drugx-app
+    ports:
+      - "7860:7860"
+    environment:
+      # Uncomment for Local dev
+      # - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - DATABASE_URL=${POSTGRESQL_ADDON_URI} # Cloud postgres
+      - PYTHONPATH=/app
+    # Uncomment for Local dev
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+    volumes:
+      - .:/app
+    networks:
+      - drugx-network
+    env_file:
+      - .env
+
+# Using managed PostgreSQL from Cloud posgtres for production demo
+# Uncomment the postgres service below for local development
+
+#   postgres:
+#     image: postgres:15-alpine
+#     container_name: drugx-db
+#     environment:
+#       - POSTGRES_DB=${POSTGRES_DB}
+#       - POSTGRES_USER=${POSTGRES_USER}
+#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#     ports:
+#       - "5433:5432"
+#     volumes:
+#       - drugx:/var/lib/postgresql/data
+#       - ./data:/docker-entrypoint-initdb.d
+#     healthcheck:
+#       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+#     networks:
+#       - drugx-network
+#     env_file:
+#       - .env
+
+# volumes:
+#   drugx_postgres_data:
+
+networks:
+  drugx-network:
+    driver: bridge
