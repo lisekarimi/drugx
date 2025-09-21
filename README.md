@@ -23,7 +23,7 @@ This way, DrugX helps patients and clinicians avoid harmful drug combinations wh
 [🚀 **Try the Live Demo**](https://huggingface.co/spaces/lisekarimi/drugx)
 
 ## 📸 Screenshots
-<img src="https://github.com/lisekarimi/drugx/blob/main/assets/static/fullpage.png?raw=true" alt="DrugX interface" width="450">
+<img src="https://github.com/lisekarimi/drugx/blob/main/assets/img/fullpage.png?raw=true" alt="DrugX interface" width="450">
 
 ## ⚙️ Pre-requisites
 **Development Tools:**
