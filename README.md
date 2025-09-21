@@ -91,7 +91,7 @@ make test
 ```
 Other test commands are available in the Makefile.
 
-👉 [Read the full testing documentation](https://github.com/lisekarimi/drugx/wiki/Unit_Tests)
+👉 [Read the full testing documentation](https://github.com/lisekarimi/drugx/wiki/Testing_Strategy)
 
 
 
