@@ -34,7 +34,7 @@ ATC_CATEGORIES = {
 # ==================== LLM CONFIGURATION ====================
 # Model names
 OPENAI_MODEL = "gpt-4o-mini"
-CLAUDE_MODEL = "claude-3-5-sonnet-20241022"
+CLAUDE_MODEL = "claude-3-5-haiku-20241022"
 
 # LLM parameters
 LLM_MAX_TOKENS = 2000
