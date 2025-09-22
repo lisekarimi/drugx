@@ -80,6 +80,9 @@ DrugX follows a modular, plug-and-play design:
 - **Components**: RxNorm, DDInter, OpenFDA, PubChem, LLM, and Monitoring.
 - **Extensible**: New data sources or databases can be added easily without changing the core pipeline.
 
+<img src="https://github.com/lisekarimi/drugx/blob/main/assets/img/archi.png?raw=true" alt="DrugX interface" width="450">
+
+
 👉 [Read the full architecture documentation](https://github.com/lisekarimi/drugx/wiki/Architecture)
 
 ## 🧪 Unit Testing
