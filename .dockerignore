@@ -2,6 +2,7 @@
 .git
 .gitignore
 .gitattributes
+.github
 
 # Python cache and compiled files
 __pycache__/
@@ -39,6 +40,7 @@ htmlcov/
 .python-version
 .pre-commit-config.yaml
 Makefile
+.ruff_cache
 
 # Documentation
 *.md
@@ -51,6 +53,8 @@ tests/
 scripts/
 monitoring/
 examples/
+act.mk
+
 
 # Data and temporary files
 data/
@@ -61,8 +65,7 @@ tmp/
 
 # Environment files
 .env
-.env.*
-!.env.example
+.env.example
 
 # OS generated files
 .DS_Store
