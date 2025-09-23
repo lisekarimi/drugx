@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drugx-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drugx
+  template:
+    metadata:
+      labels:
+        app: drugx
+    spec:
+      containers:
+      - name: drugx
+        image: drugx:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 7860

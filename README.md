@@ -96,8 +96,6 @@ Other test commands are available in the Makefile.
 
 👉 [Read the full testing documentation](https://github.com/lisekarimi/drugx/wiki/Testing_Strategy)
 
-
-
 ## 🛠️ Development
 
 - **Lint & Fix**: `make lint` | `make fix`
@@ -105,6 +103,23 @@ Other test commands are available in the Makefile.
 - **Secrets**: Gitleaks scans for sensitive data
 - **CI/CD**: GitHub Actions runs build, lint, and tests
 - **DB**: Use PostgreSQL in a cloud environment (e.g. Supabase, which offers free session pooling for concurrent access).
+
+## 🚀 Deployment
+
+### Production Deployment
+- **Hugging Face Spaces**: Deployment triggered manually via GitHub Actions when "deploy" is committed (see `.github/workflows/deploy-hf.yml` for details)
+
+### Kubernetes Deployment
+This project includes Kubernetes deployment files for cloud deployment on GCP, AWS, or local clusters:
+
+```bash
+# Deploy to Kubernetes cluster
+make k8s-build
+make k8s-deploy
+make k8s-url
+```
+
+The same YAML files can be used to deploy on Google Kubernetes Engine (GKE), Amazon EKS, or any Kubernetes cluster.
 
 ## 🛡️ Medical Safety Note
 

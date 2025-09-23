@@ -98,6 +98,29 @@ open-cov: 	## Open HTML coverage report in browser
 	@echo "  xdg-open htmlcov/index.html      (Linux)"
 
 
+# =======================
+# ⚓ Kubernetes
+# =======================
+
+# Kubernetes deployment targets
+k8s-build: ## Build and load Docker image to minikube
+	docker build -t drugx:latest .
+	minikube image load drugx:latest
+
+k8s-deploy: ## Deploy to Kubernetes cluster
+	kubectl apply -f k8s-deployment.yaml
+	kubectl apply -f k8s-service.yaml
+
+k8s-url: ## Get service URL
+	minikube service drugx-service --url
+
+k8s-status: ## Check deployment status
+	kubectl get pods
+	kubectl get services
+
+k8s-clean: ## Delete Kubernetes resources
+	kubectl delete -f k8s-service.yaml
+	kubectl delete -f k8s-deployment.yaml
 
 # =====================================
 # 📚 Documentation & Help
