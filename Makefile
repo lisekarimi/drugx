@@ -1,3 +1,43 @@
+# =====================================
+# 🌱 Project & Environment Configuration
+# =====================================
+# Read from pyproject.toml using grep (works on all platforms)
+PROJECT_NAME = $(shell python3 -c "import re; print(re.search('name = \"(.*)\"', open('pyproject.toml').read()).group(1))")
+VERSION = $(shell python3 -c "import re; print(re.search('version = \"(.*)\"', open('pyproject.toml').read()).group(1))")
+-include .env
+export
+
+# Docker configuration
+DOCKER_IMAGE = $(DOCKER_USERNAME)/$(PROJECT_NAME)
+CONTAINER_NAME = $(PROJECT_NAME)-app
+PORT ?= 8100
+
+# =====================================
+# 🐋 Docker Commands
+# =====================================
+
+build: ## Build Docker image with nginx
+	docker build -t $(DOCKER_IMAGE):$(VERSION) -t $(DOCKER_IMAGE):latest .
+
+run: ## Run with hot reloading (development mode)
+	docker run -d \
+		--name $(CONTAINER_NAME) \
+		-p $(PORT):80 \
+		-v $(PWD):/app \
+		--env-file .env \
+		$(DOCKER_IMAGE):latest
+
+logs: ## View container logs
+	docker logs -f $(CONTAINER_NAME)
+
+stop: ## Stop the Docker container
+	docker stop $(CONTAINER_NAME) || true
+
+clean: stop ## Stop and remove the Docker container
+	docker rm $(CONTAINER_NAME) || true
+
+restart: clean run ## Restart Docker container (clean + run)
+
 # =======================
 # 🐳 Docker Compose Commands
 # =======================

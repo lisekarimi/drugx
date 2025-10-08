@@ -1,6 +1,7 @@
 FROM python:3.11-slim
 
-# Install uv package manager
+# Install nginx and uv package manager
+RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Create non-root user
@@ -29,14 +30,24 @@ RUN uv sync --frozen
 # Copy source code
 COPY . .
 
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/sites-available/default
+
 # Set proper permissions
-RUN chown -R appuser:appuser /app /opt/venv
+RUN chown -R appuser:appuser /app /opt/venv && \
+    chown -R appuser:appuser /var/log/nginx /var/lib/nginx && \
+    touch /var/run/nginx.pid && \
+    chown appuser:appuser /var/run/nginx.pid
 
 # Switch to non-root user
 USER appuser
 
-# Expose Streamlit port
-EXPOSE 7860
+# Expose nginx port
+EXPOSE 80
 
-# Run Streamlit
-CMD ["streamlit", "run", "src/frontend/app.py", "--server.address", "0.0.0.0", "--server.port", "7860"]
+# Create startup script
+COPY --chown=appuser:appuser start-nginx.sh /app/start-nginx.sh
+RUN chmod +x /app/start-nginx.sh
+
+# Run nginx and Streamlit
+CMD ["/app/start-nginx.sh"]

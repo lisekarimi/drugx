@@ -410,7 +410,7 @@ def render_footer():
         </p>
         <p class="footer-links">
             <a href="https://github.com/lisekarimi/drugx" target="_blank">🔗 GitHub</a> |
-            <a href="https://github.com/lisekarimi/drugx/wiki" target="_blank">📄 Documentation</a> |
+            <a href="/docs/" target="_blank">📄 Documentation</a> |
             <a href="https://github.com/lisekarimi/drugx/blob/main/CHANGELOG.md" target="_blank">📰 Changelog</a> |
             <a href="https://www.linkedin.com/in/lisekarimi/" target="_blank">💼 LinkedIn</a>
         </p>

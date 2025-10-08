@@ -19,7 +19,7 @@ services:
     environment:
       # Uncomment for Local dev
       # - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      - DATABASE_URL=${POSTGRESQL_ADDON_URI} # Cloud postgres
+      - DATABASE_URL=${DATABASE_URL} # Cloud postgres
       - PYTHONPATH=/app
     # Uncomment for Local dev
     # depends_on:
