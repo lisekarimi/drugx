@@ -1,4 +1,4 @@
-# src/
+# src/utils/log_failed_drug.py
 """Log failed drug lookup notifications."""
 
 import os
