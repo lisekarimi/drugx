@@ -1,4 +1,4 @@
-#src/frontend/app.py
+# src/frontend/app.py
 """DrugX - Drug Interaction Analysis Frontend."""
 
 import asyncio
