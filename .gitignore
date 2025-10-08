@@ -20,9 +20,6 @@ wheels/
 *.csv
 raw/
 
-# Documentation
-docs/
-
 # Test / coverage reports
 htmlcov/
 .coverage

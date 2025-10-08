@@ -1,0 +1,2 @@
+- [Try It Live 🚀](https://drugx.lisekarimi.com/)
+- [LinkedIn](https://www.linkedin.com/in/lisekarimi/)
