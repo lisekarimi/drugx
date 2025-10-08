@@ -1,12 +1,3 @@
----
-title: DrugX
-emoji: 💊
-colorFrom: blue
-colorTo: purple
-sdk: docker
-short_description: AI Platform for Preventing Dangerous Drug Mixes
----
-
 # 💊 DrugX – AI Platform for Preventing Dangerous Drug Mixes
 
 DrugX is an AI tool that checks medicine interactions to prevent dangerous side effects and keep patients safe.
@@ -20,7 +11,7 @@ It works by:
 This way, DrugX helps patients and clinicians avoid harmful drug combinations while staying simple to use and medically reliable.
 
 ## 🌐 Production Link
-[🚀 **Try the Live Demo**](https://huggingface.co/spaces/lisekarimi/drugx)
+[🚀 **Try the Live Demo**](https://drugx.lisekarimi.com)
 
 ## 📸 Screenshots
 <img src="https://github.com/lisekarimi/drugx/blob/main/assets/img/fullpage.png?raw=true" alt="DrugX interface" width="450">
@@ -62,12 +53,11 @@ Check `.env.example` — all required environment variables are listed there.
 
 ## 📚 Documentation
 
-Detailed documentation for each component (RxNorm, DDInter, OpenFDA, PubChem, LLM, Monitoring, and testing) is available in the
-[project Wiki.](https://github.com/lisekarimi/drugx/wiki)
+Detailed documentation for each component (RxNorm, DDInter, OpenFDA, PubChem, LLM, Monitoring, and testing) is [available here] (https://drugx.lisekarimi.com/docs/#/)
 
 ## ▶️ Usage
 
-Start services (app + database + jupyter):
+Start services (app + database locally + jupyter):
 
 ```bash
 make up
@@ -83,7 +73,7 @@ DrugX follows a modular, plug-and-play design:
 <img src="https://github.com/lisekarimi/drugx/blob/main/assets/img/archi.png?raw=true" alt="DrugX interface" width="450">
 
 
-👉 [Read the full architecture documentation](https://github.com/lisekarimi/drugx/wiki/Architecture)
+👉 [Read the full architecture documentation](https://drugx.lisekarimi.com/docs/#/architecture)
 
 ## 🧪 Unit Testing
 
@@ -94,7 +84,7 @@ make test
 ```
 Other test commands are available in the Makefile.
 
-👉 [Read the full testing documentation](https://github.com/lisekarimi/drugx/wiki/Testing_Strategy)
+👉 [Read the full testing documentation](https://drugx.lisekarimi.com/docs/#/test)
 
 ## 🛠️ Development
 
@@ -108,6 +98,7 @@ Other test commands are available in the Makefile.
 
 ### Production Deployment
 - **Hugging Face Spaces**: Deployment triggered manually via GitHub Actions when "deploy" is committed (see `.github/workflows/deploy-hf.yml` for details)
+- **Google Cloud Platform (GCP)**: Deployed and managed directly on GCP for enhanced scalability, reliability, and performance in production.
 
 ### Kubernetes Deployment
 This project includes Kubernetes deployment files for cloud deployment on GCP, AWS, or local clusters:
