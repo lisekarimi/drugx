@@ -26,6 +26,11 @@ run: ## Run with hot reloading (development mode)
 		-v $(PWD):/app \
 		--env-file .env \
 		$(DOCKER_IMAGE):latest
+	@echo "🚀 Run this app in http://localhost:8100"
+
+
+list : ## List files inside the container
+	docker run --rm $(DOCKER_IMAGE) ls -la /app
 
 logs: ## View container logs
 	docker logs -f $(CONTAINER_NAME)

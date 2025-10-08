@@ -84,3 +84,10 @@ docker-compose*.yml
 # Assets (if not needed in production)
 assets/
 static/images/
+
+# Kubernetes
+k8s-deployment.yaml
+k8s-service.yaml
+
+# Application entry points
+main.py
