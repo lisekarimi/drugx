@@ -1,207 +1,176 @@
+# 💊 OpenFDA API Client
 
-# 💊 DDInter Database Client
+A Python client for retrieving adverse event statistics from the FDA Adverse Event Reporting System (FAERS) database via the OpenFDA API.
 
-A PostgreSQL-based client for checking drug interactions using the DDInter database.
+## ❓ Why Adverse Event Context?
 
-## 🔄 Pipeline Overview
+When evaluating drug combinations, understanding real-world adverse event reports provides valuable context:
+- **Safety signals**: Patterns in reported adverse events may indicate potential issues
+- **Contextual awareness**: Helps users understand if a combination has been associated with serious outcomes
+- **Informed decisions**: Provides additional data points beyond theoretical interaction databases
 
-1. **📥 Data Acquisition**
+**Important**: This data is for contextual information only, not authoritative interaction data. FAERS reports are voluntary and unverified - they cannot prove causation.
 
-    * Webscraper downloads 8 DDInter CSVs (`A,B,D,H,L,P,R,V`) from https://ddinter.scbdd.com/download/
-    * Consolidates them into `ddinter_all.csv` with category tags
+## 🔄 Input → Processing → Output
 
-2. **📊 Data Analysis (EDA)**
-
-    Performed in `data/notebooks/data_exploration.ipynb` to understand the dataset before using it.
-
-   * No missing values
-   * No flipped duplicates (A–B vs B–A)
-   * Same drug pairs repeated across categories with consistent severity
-   * Valid multi-category annotations preserved
-
-3. **⚙️ Data Processing**
-
-    * Processor aggregates duplicate pairs → merges categories into `"A,D,H"`
-    * Creates **final dataset** `ddinter_pg.csv` → 160,235 unique interactions
-
-4. **🗄️ Database Storage**
-
-    Drug interaction checking requires fast, reliable access to comprehensive interaction data.
-    CSV file scanning becomes impractical with 160,000+ interaction records, while PostgreSQL provides:
-
-    - **Instant lookups**: Indexed bidirectional searches (A+B or B+A) in milliseconds
-    - **Production reliability**: Connection pooling, transactions, and concurrent access
-    - **Scalability**: Handles large datasets efficiently without memory constraints
-    - **Data integrity**: Constraints and validation ensure data consistency
-
-    This client bridges the gap between raw DDInter research data and production-ready drug interaction checking for healthcare applications.
-
-5. **🔑 Client Access**
-
-   * Async **DDInterClient** connects to PostgreSQL
-   * Handles auto-setup if DB is empty
-   * Provides structured JSON outputs for LLM synthesis
-
-## 🗂️ Database Schema
-```sql
-CREATE TABLE ddinter (
-    ddinter_id_a TEXT NOT NULL,
-    ddinter_id_b TEXT NOT NULL,
-    drug_a VARCHAR(255) NOT NULL,
-    drug_b VARCHAR(255) NOT NULL,
-    severity severity_level NOT NULL,  -- Minor|Moderate|Major|Unknown
-    categories TEXT NOT NULL,          -- "A,B,D" comma-separated
-    UNIQUE(ddinter_id_a, ddinter_id_b)
-);
-```
-
-## 🔍 Input → Processing → Output
-
-### ⬅️ Input
-
-Normalized ingredient names from RxNorm client:
-
-* Standard names: "aspirin", "warfarin", "acetaminophen"
-* Case-insensitive matching
-* Multiple drugs supported for pairwise checking
+### 📥 Input
+List of drug ingredient names:
+- 2+ drug names required (single drugs return empty result)
+- Brand or generic names: ["aspirin", "warfarin"]
+- Case-insensitive matching
 
 ### ⚙️ Processing
-
-1.Bidirectional PostgreSQL query with case-insensitive matching
-
-2.PubChem synonym fallback when direct matching fails
-
-3.Category parsing from comma-separated strings
-
-4.Medical disclaimer generation for non-interactions
-
-5.Email notifications for failed interaction lookups
-
-6.Automatic database setup if empty
+1. Query OpenFDA for reports containing all specified drugs
+2. If no results, attempt PubChem synonym fallback
+3. Analyze sample of up to 100 reports
+4. Extract serious event counts, reaction types, and dates
+5. Return aggregate statistics
 
 ### 📤 Output JSON
 
-#### ✅ Interaction Found
-
+**Success (reports found):**
 ```json
 {
-  "severity": "Moderate",
-  "drugs": ["Acetaminophen", "Warfarin"],
-  "category_explanations": {
-    "B": "Blood and blood-forming organs"
+  "adverse_events": {
+    "drugs": ["aspirin", "warfarin"],
+    "n_reports": 1247,
+    "n_serious": 89,
+    "top_reactions": [
+      "Gastrointestinal haemorrhage",
+      "International normalised ratio increased",
+      "Haemorrhage",
+      "Haematochezia",
+      "Melaena"
+    ],
+    "last_report_date": "2024-12-15",
+    "sample_size": 100
   }
 }
 ```
 
-#### ⚠️ No Interaction Found
-
+**No reports found:**
 ```json
 {
-  "drugs": ["aspirin", "acetaminophen"],
-  "severity": null,
-  "note": "The DDInter database doesn't list any known, clinically significant pharmacokinetic or pharmacodynamic interaction between these drugs. This does not mean the combination is guaranteed 100% safe—it means that based on available published interaction data, no meaningful interaction has been established."
+  "adverse_events": {
+    "drugs": ["drug1", "drug2"],
+    "n_reports": 0,
+    "n_serious": 0,
+    "top_reactions": [],
+    "last_report_date": null,
+    "sample_size": 0,
+    "reason": "No reports found after synonym search"
+  }
 }
 ```
 
-#### 🔄 Multi-Drug Check
-
+**Error (graceful degradation):**
 ```json
-[
-  {"drugs": ["aspirin", "warfarin"], "severity": "Major", ...},
-  {"drugs": ["aspirin", "metformin"], "severity": null, ...},
-  {"drugs": ["warfarin", "metformin"], "severity": "Minor", ...}
-]
+{
+  "adverse_events": {
+    "drugs": ["drug1", "drug2"],
+    "n_reports": 0,
+    "n_serious": 0,
+    "top_reactions": [],
+    "last_report_date": null,
+    "sample_size": 0,
+    "error": "OpenFDA failed: connection timeout"
+  }
+}
 ```
 
-## 🧪 PubChem REST API (Fallback)
-- **When**: Automatic fallback when direct drug name matching fails in DDInter database
-- **Process**: Retrieves up to 3 synonyms for both drugs, tests all combinations
-- **Purpose**: Finds interactions using alternative drug names when standardized names don't match database entries
-
-For more details about PubChem integration, refer to the PubChem section.
-
-
-## ⚡ Quick Start
+## 🚀 Quick Start
 
 ```python
-from src.clients.ddinter import check_drug_interactions_consolidated
+from src.clients.openfda import get_adverse_event_context_safe
 
-# Check multiple drug interactions
-ingredients = ["aspirin", "warfarin", "acetaminophen"]
-interactions = await check_drug_interactions_consolidated(ingredients)
+# Basic usage - never raises exceptions
+result = await get_adverse_event_context_safe(["aspirin", "warfarin"])
+events = result["adverse_events"]
 
-for interaction in interactions:
-    drugs = interaction['drugs']
-    severity = interaction.get('severity', 'None')
-    print(f"{drugs[0]} + {drugs[1]}: {severity}")
+if events["n_reports"] > 0:
+    print(f"Found {events['n_reports']} FAERS reports")
+    print(f"Sample analyzed: {events['sample_size']} reports")
+    print(f"Serious events in sample: {events['n_serious']}")
 ```
 
-## 📐 Architecture Highlights
+## ⚠️ Error Handling
 
-* **Auto-setup**: Detects empty DB, loads CSV once
-* **Async client**: Connection pooling + error handling
-* **LLM-ready**: Outputs structured JSON for synthesis
+**Exception Types:**
+- `OpenFDAError`: API errors with optional status code
 
-## 🗄️ Database Performance
+**Safe Wrapper:**
+- `get_adverse_event_context_safe()`: Never raises exceptions, returns error in JSON
 
-* **Size**: 160,235 unique interactions
-* **Lookup speed**: <10ms with indexes
-* **Concurrent access**: 100+ users supported
-* **Memory use**: Efficient, no full dataset loading
-* **Indexes**: `(lower(drug_a), lower(drug_b))` for bidirectional lookups, `(ddinter_id_a, ddinter_id_b)` for unique pair enforcement
+**Automatic Fallbacks:**
+1. 404 response → Try PubChem synonyms
+2. Network errors → Retry up to 3 times with exponential backoff
+3. All retries fail → Return empty result with error message
 
-## 🛡️ Medical Safety Note
+## 🔧 Configuration
 
-* **No mechanism fabrication**: Only DDInter + curated rules
-* **Disclaimers included** when no interaction is found
-* Designed for **clinical decision support**, not absolute safety guarantees
+Default settings in `src/clients/openfda.py`:
+- 30 second timeout
+- 3 retries with exponential backoff (2-8 seconds)
+- Sample size: 100 reports per query
+- Automatic PubChem synonym fallback
 
+## 🌐 API Usage & Limits
 
-## 🏗️ Database Deployment Options
+### 🏛️ OpenFDA API
+- **Provider**: U.S. Food and Drug Administration
+- **Cost**: Free
+- **Rate Limits**: 240 requests per minute, 120,000 per day (without API key)
+- **Registration**: Optional (API key increases limits to 240/min, unlimited daily)
+- **Base URL**: `https://api.fda.gov/drug/event.json`
 
-### 🚀 Production: Cloud PostgreSQL (Recommended)
+### 🧪 PubChem Fallback
+- **When**: Automatic fallback when OpenFDA returns no results
+- **Process**: Retrieves synonyms for each drug, tests combinations
+- **Purpose**: Catches brand names, alternative spellings, and chemical variations
 
-For production deployments, managed PostgreSQL services provide better reliability, scalability, and maintenance.
+### 🔗 Endpoint Used
+- `/drug/event.json` - Search adverse event reports
 
-**Current setup uses Supabase :**
-Choose Session pooler
-update .env with the appopraite URI
-```bash
-POSTGRESQL_ADDON_URI=
+**Query Structure:**
+```
+patient.drug.medicinalproduct:"drug1"+AND+patient.drug.medicinalproduct:"drug2"
 ```
 
-Here’s a tightened-up version of your section with smoother grammar and phrasing:
+### 📊 Data Sampling
+- **Total reports**: Retrieved from API metadata (authoritative count)
+- **Serious events**: Counted from sample only (representative, not exhaustive)
+- **Reactions**: Extracted from sample (top 5 most common MedDRA terms)
+- **Transparency**: `sample_size` field shows how many reports were analyzed
 
+### 📜 Fair Usage
+The client implements responsible API usage:
+- Proper User-Agent identification
+- Reasonable timeouts to avoid hanging requests
+- Retry logic with exponential backoff
+- Logging of failed queries
 
-### 🛠️ Local Development: Docker PostgreSQL (Optional)
+**Note**: For high-volume usage, consider registering for an API key at [open.fda.gov](https://open.fda.gov/apis/authentication/).
 
-For offline development or isolated testing:
+## 📋 Understanding FAERS Data
 
-**1. Uncomment the PostgreSQL service in `docker-compose.yml`.**
+**What FAERS Contains:**
+- Voluntary adverse event reports from healthcare professionals, consumers, and manufacturers
+- Reports submitted to FDA since 2004
+- Both serious and non-serious events
 
-**2. Update the app service to depend on Postgres:**
+**Important Limitations:**
+- Reports are unverified and may be incomplete
+- Cannot establish causation (drugs may be coincidentally associated)
+- Reporting biases (newer drugs, serious events more likely to be reported)
+- Duplicate reports possible
+- Not all adverse events are reported
 
-```yaml
-app:
-  environment:
-    - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-  depends_on:
-    postgres:
-      condition: service_healthy
-```
+**Use Cases:**
+- Contextual safety information during drug interaction checks
+- Signal detection for further investigation
+- Understanding real-world reporting patterns
 
-**3. Add local credentials to `.env`:**
-
-```bash
-POSTGRES_DB=medguard
-POSTGRES_USER=medguard
-POSTGRES_PASSWORD=your_local_password
-```
-
-**4. Start the app with the local database:**
-
-```bash
-make up  # Starts both the app and Postgres services
-```
-
-**Architecture benefits**: Using a managed cloud PostgreSQL instance gives production-grade performance, automated backups, and removes Docker maintenance overhead, while keeping the same application code thanks to environment-based configuration.
+**NOT for:**
+- Proving drug interactions cause specific adverse events
+- Comparing safety between drugs (reporting rates vary)
+- Clinical decision-making as sole source of evidence
