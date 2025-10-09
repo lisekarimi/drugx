@@ -17,7 +17,7 @@ PORT ?= 8100
 # =====================================
 
 build: ## Build Docker image with nginx
-	docker build -t $(DOCKER_IMAGE):$(VERSION) -t $(DOCKER_IMAGE):latest .
+	docker build -t $(DOCKER_IMAGE):$(VERSION) .
 
 run: ## Run with hot reloading (development mode)
 	docker run -d \
@@ -25,8 +25,8 @@ run: ## Run with hot reloading (development mode)
 		-p $(PORT):80 \
 		-v $(PWD):/app \
 		--env-file .env \
-		$(DOCKER_IMAGE):latest
-	@echo "🚀 Run this app in http://localhost:8100"
+		$(DOCKER_IMAGE):$(VERSION)
+	@echo "🚀 Run this app at http://localhost:$(PORT)"
 
 
 list : ## List files inside the container
