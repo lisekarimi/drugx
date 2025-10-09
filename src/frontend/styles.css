@@ -51,7 +51,7 @@ div[data-testid="stAppViewContainer"] {
     radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(13, 148, 136, 0.1) 0%, transparent 50%),
     linear-gradient(135deg, var(--neutral-900) 0%, var(--neutral-800) 100%) !important;
-  min-height: 100vh !important;
+  min-height: auto !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
@@ -61,6 +61,7 @@ div[data-testid="block-container"] {
   max-width: 720px !important;
   margin: 2rem auto !important;
   padding: 0 !important;
+  padding-bottom: 60px !important;
   background: none !important;
   box-shadow: none !important;
   border: none !important;
@@ -545,4 +546,71 @@ hr {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%) !important;
+}
+
+
+/* Main container - add bottom padding for floating button */
+section.main > div {
+  position: relative;
+  padding: var(--spacing-2xl) !important;
+  padding-bottom: 60px !important;  /* More space on all screens */
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Floating chat button - optimized positioning */
+.floating-chat-btn {
+  position: fixed !important;
+  bottom: 150px !important;
+  right: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  background: linear-gradient(135deg, #594bed 0%, #7c3aed 100%) !important;
+  color: white !important;
+  padding: 1rem 1.75rem !important;
+  border-radius: 50px !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  box-shadow: 0 4px 20px rgba(89, 75, 237, 0.5) !important;
+  z-index: 9999 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  white-space: nowrap !important;
+}
+
+.floating-chat-btn:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 8px 24px rgba(89, 75, 237, 0.7) !important;
+  text-decoration: none !important;
+  color: white !important;
+}
+
+.floating-chat-btn:active {
+  transform: translateY(-1px) scale(0.98) !important;
+}
+
+/* Tablet and smaller desktop */
+@media (max-width: 1024px) {
+  .floating-chat-btn {
+    bottom: 150px !important;
+    right: 30px !important;
+    font-size: 0.95rem !important;
+    padding: 0.875rem 1.5rem !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  section.main > div {
+    padding-bottom: 140px !important;
+  }
+
+  .floating-chat-btn {
+    bottom: 20px !important;
+    right: 20px !important;
+    left: 20px !important;
+    font-size: 0.9rem !important;
+    padding: 1rem 1.25rem !important;
+    justify-content: center !important;
+  }
 }
