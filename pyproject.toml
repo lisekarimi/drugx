@@ -1,6 +1,6 @@
 [project]
 name = "drugx"
-version = "0.1.0"
+version = "0.2.0"
 description = "AI Platform for Drug Safety"
 readme = "README.md"
 requires-python = ">=3.11, <3.12"

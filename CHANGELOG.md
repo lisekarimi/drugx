@@ -1,4 +1,8 @@
-# 📝 Changelog
+## [0.2.0]
+
+### ✨ Added
+- Documentation support using Docsify accessible at `/docs/` endpoint
+- ChatBot widget integration for enhanced user interaction
 
 ## [0.1.0]
 
