@@ -91,3 +91,6 @@ k8s-service.yaml
 
 # Application entry points
 main.py
+
+# GCP
+alerts-gcp/

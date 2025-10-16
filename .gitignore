@@ -30,3 +30,6 @@ htmlcov/
 
 # IDEs and editors
 .vscode/
+
+# GCP
+alerts-gcp/
