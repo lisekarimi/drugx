@@ -409,7 +409,23 @@ def render_analysis_results(result):
 
 def render_footer():
     """Render application footer."""
-    st.markdown("---")
+    # Explore More Projects section
+    st.markdown(
+        """
+        <div class="explore-projects-section">
+            <h3 class="explore-title">🌟 Explore More Projects</h3>
+            <p class="explore-description">
+                Inspired by this AI solution? Explore more ML and AI projects. 🚀
+            </p>
+            <div class="explore-button-container">
+                <a href="https://lisekarimi.com" target="_blank" class="explore-button">
+                    View My Portfolio
+                </a>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     st.markdown(
         f"""

@@ -28,12 +28,11 @@ run: ## Run with hot reloading (development mode)
 		$(DOCKER_IMAGE):$(VERSION)
 	@echo "🚀 Run this app at http://localhost:$(PORT)"
 
+dev:  ## Run and build the docker container
+	make build && make run
 
 list : ## List files inside the container
 	docker run --rm $(DOCKER_IMAGE) ls -la /app
-
-logs: ## View container logs
-	docker logs -f $(CONTAINER_NAME)
 
 stop: ## Stop the Docker container
 	docker stop $(CONTAINER_NAME) || true

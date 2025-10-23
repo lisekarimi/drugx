@@ -166,14 +166,7 @@ h2, h3 {
 }
 
 h2::after, h3::after {
-  content: '' !important;
-  position: absolute !important;
-  bottom: -0.5rem !important;
-  left: 0 !important;
-  width: 3rem !important;
-  height: 2px !important;
-  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-teal) 100%) !important;
-  border-radius: 1px !important;
+  display: none !important;
 }
 
 /* Input fields with modern styling */
@@ -429,13 +422,99 @@ div[data-testid="column"]:last-child {
 
 /* Footer */
 hr {
+  display: none !important;
+}
+
+/* Explore More Projects section */
+.explore-projects-section {
+  text-align: center !important;
+  margin: var(--spacing-2xl) 0 !important;
+  padding: var(--spacing-xl) !important;
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 100%) !important;
   border: none !important;
-  height: 1px !important;
+  border-radius: var(--border-radius-lg) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: var(--shadow-lg) !important;
+  position: relative !important;
+}
+
+.explore-title {
+  color: var(--neutral-100) !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: var(--spacing-md) !important;
+  background: linear-gradient(135deg,
+    var(--neutral-50) 0%,
+    var(--primary-blue-light) 50%,
+    var(--secondary-teal) 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.explore-description {
+  color: var(--neutral-300) !important;
+  font-size: 1.1rem !important;
+  font-weight: 400 !important;
+  margin-bottom: var(--spacing-lg) !important;
+  line-height: 1.6 !important;
+}
+
+.explore-button-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.explore-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-purple) 100%) !important;
+  color: white !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 1rem 2rem !important;
+  border-radius: var(--border-radius-md) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: var(--shadow-md) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.explore-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
   background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    transparent 100%) !important;
-  margin: var(--spacing-2xl) 0 var(--spacing-xl) 0 !important;
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.explore-button:hover::before {
+  left: 100% !important;
+}
+
+.explore-button:hover {
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-lg) !important;
+  text-decoration: none !important;
+  color: white !important;
+}
+
+.explore-button:active {
+  transform: translateY(0) !important;
 }
 
 /* Footer content */
@@ -612,5 +691,23 @@ section.main > div {
     font-size: 0.9rem !important;
     padding: 1rem 1.25rem !important;
     justify-content: center !important;
+  }
+
+  .explore-projects-section {
+    margin: var(--spacing-xl) 0 !important;
+    padding: var(--spacing-lg) !important;
+  }
+
+  .explore-title {
+    font-size: 1.25rem !important;
+  }
+
+  .explore-description {
+    font-size: 1rem !important;
+  }
+
+  .explore-button {
+    font-size: 0.9rem !important;
+    padding: 0.875rem 1.5rem !important;
   }
 }
