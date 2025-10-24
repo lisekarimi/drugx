@@ -1,3 +1,23 @@
+# Uncomment for local development
+# apiVersion: v1                    # Kubernetes API version for Service resources
+# kind: Service                     # Type of resource we're creating (exposes pods)
+# metadata:                         # Information about this service
+#   name: drugx-service             # Name of this service (used to reference it)
+# spec:                             # Specification - how the service works
+#   selector:                       # Which pods this service routes traffic to
+#     app: drugx                    # Route to pods labeled "app: drugx" (matches deployment labels)
+#   ports:                          # Port mappings
+#   - port: 80                      # Port the service listens on inside the cluster
+#     targetPort: 80                # Port on the pod/container to forward traffic to
+#     nodePort: 30080               # External port exposed on the node
+#   type: NodePort                  # Service type - exposes service on each node's IP at nodePort
+
+# The key: selector.app: drugx matches the pod labels from the deployment, so the service knows which pods to send traffic to.
+# Traffic flows: External (30080) → Service (80) → Container (80).
+# The service type is NodePort, which means it will be accessible on a random port on each node.
+
+
+# Uncomment for production deployment (GKE)
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,7 +26,6 @@ spec:
   selector:
     app: drugx
   ports:
-  - port: 7860
-    targetPort: 7860
-    nodePort: 30860
-  type: NodePort
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer

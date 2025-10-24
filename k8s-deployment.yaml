@@ -1,3 +1,32 @@
+# # Uncomment for local development
+# apiVersion: apps/v1               # Kubernetes API version for Deployment resources
+# kind: Deployment                  # Type of resource we're creating (manages pods)
+# metadata:                         # Information about this deployment
+#   name: drugx-app                 # Name of this deployment (used to reference it)
+# spec:                             # Specification - what we want Kubernetes to do
+#   replicas: 1                     # Run 1 copy (pod) of the application
+#   selector:                       # How deployment finds which pods it manages
+#     matchLabels:                  # Match pods with these labels
+#       app: drugx                  # Find pods labeled with "app: drugx"
+#   template:                       # Blueprint for creating pods
+#     metadata:                     # Metadata for the pods to be created
+#       labels:                     # Labels to attach to each pod
+#         app: drugx                # Label this pod as "app: drugx" (matches selector above)
+#     spec:                         # Specification for the pod
+#       containers:                 # List of containers to run in this pod
+#       - name: drugx               # Name of the container
+#         image: drugx:latest       # Docker image to use
+#         imagePullPolicy: Never    # Don't pull from registry, use local image
+#         ports:                    # Ports this container exposes
+#         - containerPort:80        # Container listens on port 80
+
+
+# The key relationships: selector.matchLabels must match template.metadata.labels so the deployment knows which pods belong to it.
+# It tells Kubernetes to run one copy (replica) of the container and make it available on port 80.
+# The container listens on port 80 and is labeled with "app: drugx" for easy identification.
+
+
+# Uncomment for production deployment (GKE)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +43,10 @@ spec:
     spec:
       containers:
       - name: drugx
-        image: drugx:latest
-        imagePullPolicy: Never
+        image: gcr.io/drugxk8s/drugx:latest
+        imagePullPolicy: Always
         ports:
-        - containerPort: 7860
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: drugx-secrets

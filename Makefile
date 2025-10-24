@@ -146,21 +146,26 @@ open-cov: 	## Open HTML coverage report in browser
 # ⚓ Kubernetes
 # =======================
 
+k8s-start: ## Start Kubernetes cluster
+	minikube start
+	kubectl get nodes
+
 # Kubernetes deployment targets
 k8s-build: ## Build and load Docker image to minikube
 	docker build -t drugx:latest .
 	minikube image load drugx:latest
+	minikube image ls | findstr drugx
 
 k8s-deploy: ## Deploy to Kubernetes cluster
 	kubectl apply -f k8s-deployment.yaml
 	kubectl apply -f k8s-service.yaml
 
-k8s-url: ## Get service URL
-	minikube service drugx-service --url
-
 k8s-status: ## Check deployment status
 	kubectl get pods
 	kubectl get services
+
+k8s-url: ## Run the application in the browser
+	minikube service drugx-service --url
 
 k8s-clean: ## Delete Kubernetes resources
 	kubectl delete -f k8s-service.yaml
