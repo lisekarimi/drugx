@@ -188,7 +188,7 @@ class RxNormClient:
                     continue
 
             # If all attempts fail, log and raise
-            log_failed_drug(drug_name, "rxnorm_pubchem")
+            await log_failed_drug([drug_name], "rxnorm_pubchem")
             raise DrugNotFoundError(drug_name)
 
         except DrugNotFoundError:
@@ -409,7 +409,7 @@ async def normalize_and_deduplicate_drugs(drug_names: list[str]) -> dict[str, An
             # Log failed normalizations
             if "candidates" in result:
                 logger.warning(f"Candidates for '{drug_name}': {result['candidates']}")
-                log_failed_drug(drug_name, "normalization_failed")
+                await log_failed_drug([drug_name], "normalization_failed")
             elif "error" in result:
                 logger.error(f"Error normalizing '{drug_name}': {result['error']}")
 

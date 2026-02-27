@@ -43,9 +43,9 @@ DrugX follows a **modular plug-and-play architecture**:
 
    ⚠️ **Important:** The LLM never judges or overrides severity levels — it only summarizes existing data.
 
-6. **Ops & Monitoring (n8n)**
+6. **Ops & Monitoring**
 
-   A scheduled workflow reads alert emails, aggregates failed lookups, and sends **Telegram summaries** for proactive monitoring.
+   Every failure is recorded in the **`failed_drug_lookups`** database table and triggers a real-time **Pushover** push notification. The DB can be queried at any time to identify patterns across drugs and API sources.
 
 ## 🧩 System Components
 
@@ -71,10 +71,10 @@ DrugX follows a **modular plug-and-play architecture**:
 - Summarizes JSON data into **human-readable risk reports**.
 - Includes **disclaimers** and avoids hallucinating new mechanisms.
 
-### 🔹 Monitoring (n8n Workflow)
-- Runs every 3 days.
-- Aggregates **failed lookups** from email alerts.
-- Sends summaries to **Telegram** for team visibility.
+### 🔹 Monitoring
+- Real-time **Pushover** push notification on every failed lookup.
+- All failures persisted in the **`failed_drug_lookups`** PostgreSQL table.
+- Query the DB anytime to identify patterns by drug, source, or time range.
 
 ## 🏗️ Extensibility
 

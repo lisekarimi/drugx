@@ -75,7 +75,7 @@ Normalized ingredient names from RxNorm client:
 
 4.Medical disclaimer generation for non-interactions
 
-5.Email notifications for failed interaction lookups
+5.Pushover notifications for failed interaction lookups
 
 6.Automatic database setup if empty
 
@@ -164,44 +164,9 @@ for interaction in interactions:
 For production deployments, managed PostgreSQL services provide better reliability, scalability, and maintenance.
 
 **Current setup uses Supabase :**
-Choose Session pooler
-update .env with the appopraite URI
+Choose Session pooler and set `DATABASE_URL` in `.env`:
 ```bash
-POSTGRESQL_ADDON_URI=
-```
-
-Here’s a tightened-up version of your section with smoother grammar and phrasing:
-
-
-### 🛠️ Local Development: Docker PostgreSQL (Optional)
-
-For offline development or isolated testing:
-
-**1. Uncomment the PostgreSQL service in `docker-compose.yml`.**
-
-**2. Update the app service to depend on Postgres:**
-
-```yaml
-app:
-  environment:
-    - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-  depends_on:
-    postgres:
-      condition: service_healthy
-```
-
-**3. Add local credentials to `.env`:**
-
-```bash
-POSTGRES_DB=medguard
-POSTGRES_USER=medguard
-POSTGRES_PASSWORD=your_local_password
-```
-
-**4. Start the app with the local database:**
-
-```bash
-make up  # Starts both the app and Postgres services
+DATABASE_URL=
 ```
 
 **Architecture benefits**: Using a managed cloud PostgreSQL instance gives production-grade performance, automated backups, and removes Docker maintenance overhead, while keeping the same application code thanks to environment-based configuration.

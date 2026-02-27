@@ -49,10 +49,7 @@ restart: clean run ## Restart Docker container (clean + run)
 up: ## Start all services
 	docker-compose up
 
-# pgapp: ## Start app and pg services (commented - using cloud PostgreSQL)
-#	docker-compose up postgres app
-
-app: ## Start app service only (using cloud PostgreSQL)
+app: ## Start app service only
 	docker-compose up app
 
 nb: ## Start Jupyter Notebook service
@@ -60,9 +57,6 @@ nb: ## Start Jupyter Notebook service
 
 down: ## Stop all services
 	docker-compose down
-
-# db: ## Connect to local PostgreSQL (commented - using cloud PostgreSQL)
-#	docker exec -it drugx-postgres psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
 
 # =======================
 # 📊 Data Commands
@@ -73,6 +67,9 @@ data-download: ## Download DDInter CSV files
 
 data-process: ## Process DDInter CSV files
 	uvx --with pandas python data/data_processor.py
+
+db-load: ## Load ddinter_pg.csv into cloud PostgreSQL
+	uv run python -c "import asyncio; from src.utils.database import setup_database; asyncio.run(setup_database())"
 
 # =======================
 # 🪝 Hooks
