@@ -21,6 +21,7 @@ This way, DrugX helps patients and clinicians avoid harmful drug combinations wh
 - Python **3.11.x** (not 3.12+)
 - [uv package manager](https://docs.astral.sh/uv/getting-started/installation/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Pushover](https://pushover.net) — for push notifications on failed drug lookups
 - Make:
   - Windows: `winget install GnuWin32.Make`
   - macOS: `brew install make`
@@ -57,7 +58,7 @@ Detailed documentation for each component (RxNorm, DDInter, OpenFDA, PubChem, LL
 
 ## ▶️ Usage
 
-Start services (app + database locally + jupyter):
+Start services (app + Jupyter):
 
 ```bash
 make up
@@ -92,7 +93,7 @@ Other test commands are available in the Makefile.
 - **Hooks**: `make install-hooks`
 - **Secrets**: Gitleaks scans for sensitive data
 - **CI/CD**: GitHub Actions runs build, lint, and tests
-- **DB**: Use PostgreSQL in a cloud environment (e.g. Supabase, which offers free session pooling for concurrent access).
+- **DB**: Use a hosted PostgreSQL instance — [Neon](https://neon.tech) offers a free tier.
 
 ## 🚀 Deployment
 
