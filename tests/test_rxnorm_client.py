@@ -100,6 +100,7 @@ class TestRxNormClient:
         mock_request.side_effect = [
             EMPTY_RXCUI_RESPONSE,  # No exact match
             {"approximateGroup": {}},  # No approximate match
+            {"suggestionGroup": {}},  # No spelling suggestions
         ]
 
         with pytest.raises(DrugNotFoundError) as exc_info:
