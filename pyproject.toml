@@ -14,7 +14,6 @@ dependencies = [
    "asyncio-throttle>=1.0.0", # Rate limiting for APIs
    "tenacity>=8.0.0", # Retry logic for API failures
    "asyncpg>=0.30.0",
-   "resend>=0.6.0", # Email notifications for monitoring
 ]
 
 [tool.ruff]

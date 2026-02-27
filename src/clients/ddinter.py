@@ -7,7 +7,7 @@ Provides functionality to check interactions between normalized drug ingredients
 from typing import Any
 
 from ..constants import ATC_CATEGORIES
-from ..utils.database import get_db_pool, setup_database
+from ..utils.database import get_db_pool, init_failed_lookups_table, setup_database
 from ..utils.log_failed_drug import log_failed_drug
 from ..utils.logging import logger
 from .pubchem import get_synonyms as get_pubchem_synonyms
@@ -62,6 +62,7 @@ class DDInterClient:
                             logger.info(
                                 f"DDInter database ready with {count} interactions"
                             )
+                            await init_failed_lookups_table(self.pool)
                             return  # Database already has data, skip setup
                     except Exception as e:
                         # Table doesn't exist or other database error
@@ -131,8 +132,8 @@ class DDInterClient:
                                 }
 
                     # All attempts failed
-                    log_failed_drug(
-                        f"{ingredient_a} + {ingredient_b}", "ddinter_pubchem"
+                    await log_failed_drug(
+                        [ingredient_a, ingredient_b], "ddinter_pubchem"
                     )
                     raise InteractionNotFoundError(ingredient_a, ingredient_b)
 
@@ -181,8 +182,8 @@ class DDInterClient:
             logger.info(
                 f"No interaction found between '{ingredient_a}' and '{ingredient_b}'"
             )
-            log_failed_drug(
-                f"{ingredient_a} + {ingredient_b}", "ddinter_no_interaction"
+            await log_failed_drug(
+                [ingredient_a, ingredient_b], "ddinter_no_interaction"
             )
 
             return {

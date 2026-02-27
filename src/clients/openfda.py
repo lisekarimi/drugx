@@ -153,7 +153,7 @@ class OpenFDAClient:
                 continue
 
         # All attempts failed - log and return empty result
-        log_failed_drug(" + ".join(ingredient_names), "openfda_no_reports")
+        await log_failed_drug(ingredient_names, "openfda_no_reports")
         return {
             "drugs": ingredient_names,
             "n_reports": 0,
@@ -233,7 +233,7 @@ async def get_adverse_event_context_safe(ingredient_names: list[str]) -> dict[st
             return {"adverse_events": await client.get_adverse_events(ingredient_names)}
     except Exception as e:
         logger.error(f"OpenFDA context failed: {e}")
-        log_failed_drug(" + ".join(ingredient_names), "openfda_error")
+        await log_failed_drug(ingredient_names, "openfda_error")
         return {
             "adverse_events": {
                 "drugs": ingredient_names,

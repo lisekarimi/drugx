@@ -140,30 +140,64 @@ class RxNormClient:
                 rxcui = best_candidate.get("rxcui")
                 matched_term = best_candidate.get("name")
 
-                # Check if matched term is None or empty - treat as not found
-                if not matched_term or matched_term.lower() in ["none", "null"]:
-                    candidate_names = [
-                        c.get("name")
-                        for c in candidates
-                        if c.get("name")
-                        and c.get("name").lower() not in ["none", "null"]
-                    ]
-                    if candidate_names:
-                        raise DrugNotFoundError(drug_name, candidate_names)
-
-                if rxcui:
+                # If best candidate has a direct RxCUI, use it immediately
+                if (
+                    rxcui
+                    and matched_term
+                    and matched_term.lower() not in ["none", "null"]
+                ):
                     logger.warning(
                         f"Using approximate match: '{drug_name}' → '{matched_term}' (RxCUI: {rxcui})"
                     )
                     return rxcui
 
-                # If best match has no RxCUI, collect candidate names for user selection
-                candidate_names = [c.get("name") for c in candidates if c.get("name")]
-                if candidate_names:
-                    logger.warning(
-                        f"Found candidates for '{drug_name}': {candidate_names}"
+                # No direct RxCUI — retry exact search with all valid candidate names
+                candidate_names = [
+                    c.get("name")
+                    for c in candidates
+                    if c.get("name") and c.get("name").lower() not in ["none", "null"]
+                ]
+                for candidate_name in candidate_names[:3]:
+                    try:
+                        candidate_data = await self._make_request(
+                            "rxcui.json", params={"name": candidate_name, "search": "2"}
+                        )
+                        candidate_id_group = candidate_data.get("idGroup", {})
+                        candidate_rxnorm_ids = candidate_id_group.get("rxnormId", [])
+                        if candidate_rxnorm_ids:
+                            rxcui = candidate_rxnorm_ids[0]
+                            logger.info(
+                                f"Found RxCUI via candidate: '{drug_name}' → '{candidate_name}' (RxCUI: {rxcui})"
+                            )
+                            return rxcui
+                    except (RxNormAPIError, DrugNotFoundError):
+                        continue
+
+            # Try RxNorm spelling suggestions
+            logger.info(f"Trying RxNorm spelling suggestions for '{drug_name}'...")
+            suggestions_data = await self._make_request(
+                "spellingsuggestions.json", params={"name": drug_name}
+            )
+            suggestion_group = suggestions_data.get("suggestionGroup", {})
+            suggestion_list = suggestion_group.get("suggestionList") or {}
+            suggestions = suggestion_list.get("suggestion", [])
+
+            for suggestion in suggestions[:3]:
+                try:
+                    suggestion_data = await self._make_request(
+                        "rxcui.json", params={"name": suggestion, "search": "2"}
                     )
-                    raise DrugNotFoundError(drug_name, candidate_names)
+                    suggestion_id_group = suggestion_data.get("idGroup", {})
+                    suggestion_rxnorm_ids = suggestion_id_group.get("rxnormId", [])
+
+                    if suggestion_rxnorm_ids:
+                        rxcui = suggestion_rxnorm_ids[0]
+                        logger.info(
+                            f"Found RxCUI via spelling suggestion: '{drug_name}' → '{suggestion}' (RxCUI: {rxcui})"
+                        )
+                        return rxcui
+                except (RxNormAPIError, DrugNotFoundError):
+                    continue
 
             # Try PubChem synonyms fallback
             logger.info(f"RxNorm failed for '{drug_name}', trying PubChem synonyms...")
@@ -188,7 +222,7 @@ class RxNormClient:
                     continue
 
             # If all attempts fail, log and raise
-            log_failed_drug(drug_name, "rxnorm_pubchem")
+            await log_failed_drug([drug_name], "rxnorm_pubchem")
             raise DrugNotFoundError(drug_name)
 
         except DrugNotFoundError:
@@ -409,7 +443,7 @@ async def normalize_and_deduplicate_drugs(drug_names: list[str]) -> dict[str, An
             # Log failed normalizations
             if "candidates" in result:
                 logger.warning(f"Candidates for '{drug_name}': {result['candidates']}")
-                log_failed_drug(drug_name, "normalization_failed")
+                await log_failed_drug([drug_name], "normalization_failed")
             elif "error" in result:
                 logger.error(f"Error normalizing '{drug_name}': {result['error']}")
 

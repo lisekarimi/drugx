@@ -3,6 +3,7 @@
 
 import os
 from pathlib import Path
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import asyncpg
 import pandas as pd
@@ -11,12 +12,43 @@ from ..utils.logging import logger
 
 
 async def get_db_pool():
-    """Create PostgreSQL connection pool."""
+    """Create PostgreSQL connection pool.
+
+    Strips sslmode from the URL and passes ssl='require' directly,
+    as asyncpg does not support all sslmode values used by cloud providers.
+    """
     database_url = os.getenv("DATABASE_URL")
     if not database_url:
         raise ValueError("DATABASE_URL environment variable not set")
 
-    return await asyncpg.create_pool(database_url)
+    parsed = urlparse(database_url)
+    params = parse_qs(parsed.query, keep_blank_values=True)
+    params.pop("sslmode", None)
+    clean_url = urlunparse(parsed._replace(query=urlencode(params, doseq=True)))
+
+    return await asyncpg.create_pool(clean_url, ssl="require")
+
+
+async def init_failed_lookups_table(pool):
+    """Create failed_drug_lookups table if it does not exist."""
+    async with pool.acquire() as conn:
+        await conn.execute("""
+            CREATE TABLE IF NOT EXISTS failed_drug_lookups (
+                id SERIAL PRIMARY KEY,
+                drugs TEXT[] NOT NULL,
+                source VARCHAR(50) NOT NULL,
+                failed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            );
+        """)
+        await conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_failed_lookups_source
+            ON failed_drug_lookups(source);
+        """)
+        await conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_failed_lookups_failed_at
+            ON failed_drug_lookups(failed_at DESC);
+        """)
+    logger.info("failed_drug_lookups table and indexes ensured")
 
 
 async def init_ddinter_table(pool):
@@ -122,6 +154,7 @@ async def setup_database(csv_path: str = "./data/ddinter_pg.csv") -> dict:
     pool = await get_db_pool()
     try:
         await init_ddinter_table(pool)
+        await init_failed_lookups_table(pool)
         await load_ddinter_csv(pool, csv_path)
         logger.info("Database setup complete with RLS enabled")
 
