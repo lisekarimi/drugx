@@ -140,15 +140,6 @@ def render_header():
             """
         )
 
-    st.markdown(
-        """
-        <a href="https://docs.drugx.lisekarimi.com" class="floating-chat-btn" target="_blank">
-            💬 Chat with our AI Assistant
-        </a>
-    """,
-        unsafe_allow_html=True,
-    )
-
 
 def render_drug_inputs():
     """Render drug input section."""
