@@ -142,7 +142,7 @@ def render_header():
 
     st.markdown(
         """
-        <a href="/docs/" class="floating-chat-btn" target="_blank">
+        <a href="https://lisekarimi.github.io/drugx/" class="floating-chat-btn" target="_blank">
             💬 Chat with our AI Assistant
         </a>
     """,
@@ -435,7 +435,7 @@ def render_footer():
         </p>
         <p class="footer-links">
             <a href="https://github.com/lisekarimi/drugx" target="_blank">🔗 GitHub</a> |
-            <a href="/docs/" target="_blank">📄 Documentation</a> |
+            <a href="https://lisekarimi.github.io/drugx/" target="_blank">📄 Documentation</a> |
             <a href="https://github.com/lisekarimi/drugx/blob/main/CHANGELOG.md" target="_blank">📰 Changelog</a> |
             <a href="https://www.linkedin.com/in/lisekarimi/" target="_blank">💼 LinkedIn</a>
         </p>
