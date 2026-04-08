@@ -1,17 +1,15 @@
 ## [0.3.0]
 
 ### ✨ Added
-- Fly.io deployment configuration and `make deploy` target
 - Rate limiting and user agent blocking
 
 ### 🔧 Changed
 - Documentation moved from Docsify (`/docs/` endpoint) to GitHub Pages
 - Docs links updated to new domain
-- App deployment migrated to Fly.io to reduce hosting costs
 
 ### 🗑️ Removed
-- nginx service and configuration (no longer needed after Fly.io migration)
-- Hugging Face and previous Fly.io deployment workflows
+- nginx service and configuration
+- Hugging Face deployment workflows
 
 ## [0.2.0]
 
