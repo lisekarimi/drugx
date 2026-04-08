@@ -31,6 +31,9 @@ run: ## Run with hot reloading (development mode)
 dev:  ## Run and build the docker container
 	make build && make run
 
+deploy: ## Deploy to Fly.io
+	fly deploy
+
 list : ## List files inside the container
 	docker run --rm $(DOCKER_IMAGE) ls -la /app
 
