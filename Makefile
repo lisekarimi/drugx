@@ -16,13 +16,13 @@ PORT ?= 8100
 # 🐋 Docker Commands
 # =====================================
 
-build: ## Build Docker image with nginx
+build: ## Build Docker image
 	docker build -t $(DOCKER_IMAGE):$(VERSION) .
 
 run: ## Run with hot reloading (development mode)
 	docker run -d \
 		--name $(CONTAINER_NAME) \
-		-p $(PORT):80 \
+		-p $(PORT):7860 \
 		-v $(PWD):/app \
 		--env-file .env \
 		$(DOCKER_IMAGE):$(VERSION)
