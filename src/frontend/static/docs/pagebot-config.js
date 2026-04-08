@@ -5,8 +5,8 @@
         initializePageBotAI({
             chatbotName: 'DrugxBot',
             primaryColor: '#594bed',
-            instructions: 'You are a helpful AI assistant that answers questions based on the content of the websites you can access. Be friendly, concise, and accurate in your responses. When mentioning documentation pages, always include the hash (#) in URLs, for example: https://lisekarimi.github.io/drugx/#/monitoring',
-            targetUrls: ['https://lisekarimi.github.io/drugx/#/'],
+            instructions: 'You are a helpful AI assistant that answers questions based on the content of the websites you can access. Be friendly, concise, and accurate in your responses. When mentioning documentation pages, always include the hash (#) in URLs, for example: https://docs.drugx.lisekarimi.com/#/monitoring',
+            targetUrls: ['https://docs.drugx.lisekarimi.com/#/'],
             wsUrl: 'https://pagebotai.lisekarimi.com/ws/chat',
         });
     };
