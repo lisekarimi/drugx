@@ -5,14 +5,17 @@
 - Streamlit Cloud deployment — app live at [drugx-app.streamlit.app](https://drugx-app.streamlit.app)
 - Landing page deployed on GitHub Pages with hero, pipeline visualization, stats, and zero-hallucination callout
 - Docs site deployed on GitHub Pages
+- Table CSS styling for LLM-generated drug summary tables (distinct header, zebra striping, row hover)
 
 ### 🔧 Changed
 - Documentation moved from Docsify (`/docs/` endpoint) to GitHub Pages
 - Docs links updated to new domain
+- Switched LLM provider from OpenAI (`gpt-4o-mini`) to Cerebras (`gpt-oss-120b`) with `reasoning_effort=low`
 
 ### 🗑️ Removed
 - nginx service and configuration
 - Hugging Face deployment workflows
+- OpenAI and Anthropic dependencies and API keys
 
 ## [0.2.0]
 
