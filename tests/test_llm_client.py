@@ -23,18 +23,14 @@ class TestLLMClient:
     async def test_initialization_with_keys(self):
         """Test client initialization with API keys."""
         with patch("src.clients.llm.OPENAI_API_KEY", "test-key"):
-            with patch("src.clients.llm.ANTHROPIC_API_KEY", "test-key"):
-                client = LLMClient()
-                assert client.openai_client is not None
-                assert client.anthropic_session is not None
+            client = LLMClient()
+            assert client.openai_client is not None
 
     async def test_initialization_without_keys(self):
         """Test client initialization without API keys."""
         with patch("src.clients.llm.OPENAI_API_KEY", None):
-            with patch("src.clients.llm.ANTHROPIC_API_KEY", None):
-                client = LLMClient()
-                assert client.openai_client is None
-                assert client.anthropic_session is None
+            client = LLMClient()
+            assert client.openai_client is None
 
     async def test_create_analysis_prompt(self):
         """Test prompt creation from input data."""
@@ -62,26 +58,6 @@ class TestLLMClient:
         assert result["status"] == "success"
         assert result["analysis"] == "Analysis result"
 
-    @patch("src.clients.llm.LLMClient._call_claude")
-    @patch("src.clients.llm.LLMClient._call_openai_gpt4")
-    async def test_analyze_fallback_to_claude(self, mock_openai, mock_claude):
-        """Test fallback to Claude when OpenAI fails."""
-        mock_openai.side_effect = LLMAnalysisError("OpenAI failed", "openai")
-        mock_claude.return_value = "Claude analysis result"
-
-        with patch("src.clients.llm.OPENAI_API_KEY", "test-key"):
-            with patch("src.clients.llm.ANTHROPIC_API_KEY", "test-key"):
-                client = LLMClient()
-                result = await client.analyze_drug_interactions(
-                    SAMPLE_DATA["rxnorm"],
-                    SAMPLE_DATA["ddinter"],
-                    SAMPLE_DATA["openfda"],
-                )
-
-        assert result["provider"] == "anthropic"
-        assert result["status"] == "success"
-        assert result["analysis"] == "Claude analysis result"
-
     async def test_call_openai_no_client(self):
         """Test OpenAI call without client."""
         with patch("src.clients.llm.OPENAI_API_KEY", None):
@@ -91,17 +67,6 @@ class TestLLMClient:
                 await client._call_openai_gpt4("test prompt")
 
             assert exc_info.value.provider == "openai"
-            assert "API key not provided" in str(exc_info.value)
-
-    async def test_call_claude_no_session(self):
-        """Test Claude call without session."""
-        with patch("src.clients.llm.ANTHROPIC_API_KEY", None):
-            client = LLMClient()
-
-            with pytest.raises(LLMAnalysisError) as exc_info:
-                await client._call_claude("test prompt")
-
-            assert exc_info.value.provider == "anthropic"
             assert "API key not provided" in str(exc_info.value)
 
 

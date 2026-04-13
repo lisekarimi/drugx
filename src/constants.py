@@ -34,17 +34,14 @@ ATC_CATEGORIES = {
 # ==================== LLM CONFIGURATION ====================
 # Model names
 OPENAI_MODEL = "gpt-4o-mini"
-CLAUDE_MODEL = "claude-3-5-haiku-20241022"
 
 # LLM parameters
 LLM_MAX_TOKENS = 2000
 LLM_TEMPERATURE = 0.1  # Low temperature for consistent, factual responses
 LLM_TIMEOUT = 60.0  # Timeout in seconds
-ANTHROPIC_VERSION = "2023-06-01"
 
 # API Keys (from environment)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
 # ==================== LLM PROMPTS ====================
 LLM_SYSTEM_PROMPT = "You are a clinical pharmacology expert specializing in drug interaction analysis and medication safety. Provide evidence-based, cautious analysis while always emphasizing the need for professional medical consultation."
