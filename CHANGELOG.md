@@ -2,6 +2,9 @@
 
 ### ✨ Added
 - Rate limiting and user agent blocking
+- Streamlit Cloud deployment — app live at [drugx-app.streamlit.app](https://drugx-app.streamlit.app)
+- Landing page deployed on GitHub Pages with hero, pipeline visualization, stats, and zero-hallucination callout
+- Docs site deployed on GitHub Pages
 
 ### 🔧 Changed
 - Documentation moved from Docsify (`/docs/` endpoint) to GitHub Pages
