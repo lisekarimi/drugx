@@ -9,13 +9,13 @@ import sys
 
 import streamlit as st
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from constants import VERSION
 from src.clients.ddinter import check_drug_interactions_consolidated
 from src.clients.llm import analyze_drug_interactions_safe
 from src.clients.openfda import get_adverse_event_context_safe
 from src.clients.rxnorm import normalize_and_deduplicate_drugs
+from src.constants import VERSION
 from src.utils.logging import logger, set_log_level
 
 # Set debug level to see API details
