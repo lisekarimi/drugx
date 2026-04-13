@@ -22,19 +22,19 @@ class TestLLMClient:
 
     async def test_initialization_with_keys(self):
         """Test client initialization with API keys."""
-        with patch("src.clients.llm.OPENAI_API_KEY", "test-key"):
+        with patch("src.clients.llm.CEREBRAS_API_KEY", "test-key"):
             client = LLMClient()
             assert client.openai_client is not None
 
     async def test_initialization_without_keys(self):
         """Test client initialization without API keys."""
-        with patch("src.clients.llm.OPENAI_API_KEY", None):
+        with patch("src.clients.llm.CEREBRAS_API_KEY", None):
             client = LLMClient()
             assert client.openai_client is None
 
     async def test_create_analysis_prompt(self):
         """Test prompt creation from input data."""
-        with patch("src.clients.llm.OPENAI_API_KEY", "test-key"):
+        with patch("src.clients.llm.CEREBRAS_API_KEY", "test-key"):
             client = LLMClient()
             prompt = client._create_analysis_prompt(
                 SAMPLE_DATA["rxnorm"], SAMPLE_DATA["ddinter"], SAMPLE_DATA["openfda"]
@@ -44,29 +44,29 @@ class TestLLMClient:
             assert "Major" in prompt
 
     @patch("src.clients.llm.LLMClient._call_openai_gpt4")
-    async def test_analyze_success_openai(self, mock_openai):
-        """Test successful analysis with OpenAI."""
-        mock_openai.return_value = "Analysis result"
+    async def test_analyze_success_cerebras(self, mock_cerebras):
+        """Test successful analysis with Cerebras."""
+        mock_cerebras.return_value = "Analysis result"
 
-        with patch("src.clients.llm.OPENAI_API_KEY", "test-key"):
+        with patch("src.clients.llm.CEREBRAS_API_KEY", "test-key"):
             client = LLMClient()
             result = await client.analyze_drug_interactions(
                 SAMPLE_DATA["rxnorm"], SAMPLE_DATA["ddinter"], SAMPLE_DATA["openfda"]
             )
 
-        assert result["provider"] == "openai"
+        assert result["provider"] == "cerebras"
         assert result["status"] == "success"
         assert result["analysis"] == "Analysis result"
 
-    async def test_call_openai_no_client(self):
-        """Test OpenAI call without client."""
-        with patch("src.clients.llm.OPENAI_API_KEY", None):
+    async def test_call_cerebras_no_client(self):
+        """Test Cerebras call without client."""
+        with patch("src.clients.llm.CEREBRAS_API_KEY", None):
             client = LLMClient()
 
             with pytest.raises(LLMAnalysisError) as exc_info:
                 await client._call_openai_gpt4("test prompt")
 
-            assert exc_info.value.provider == "openai"
+            assert exc_info.value.provider == "cerebras"
             assert "API key not provided" in str(exc_info.value)
 
 
@@ -78,7 +78,7 @@ class TestConvenienceFunctions:
         """Test successful safe analysis."""
         mock_analyze.return_value = {
             "analysis": "Test analysis",
-            "provider": "openai",
+            "provider": "cerebras",
             "status": "success",
         }
 
@@ -86,7 +86,7 @@ class TestConvenienceFunctions:
             SAMPLE_DATA["rxnorm"], SAMPLE_DATA["ddinter"], SAMPLE_DATA["openfda"]
         )
 
-        assert result["provider"] == "openai"
+        assert result["provider"] == "cerebras"
         assert result["status"] == "success"
 
 
@@ -95,9 +95,9 @@ class TestErrorHandling:
 
     async def test_llm_analysis_error_with_provider(self):
         """Test LLMAnalysisError with provider."""
-        error = LLMAnalysisError("Test error", "openai")
+        error = LLMAnalysisError("Test error", "cerebras")
 
-        assert error.provider == "openai"
+        assert error.provider == "cerebras"
         assert "Test error" in str(error)
 
     async def test_llm_analysis_error_without_provider(self):

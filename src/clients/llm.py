@@ -1,5 +1,5 @@
 # src/clients/llm.py
-"""LLM client for drug interaction analysis with GPT-4."""
+"""LLM client for drug interaction analysis with Cerebras."""
 
 import json
 from typing import Any
@@ -13,12 +13,13 @@ from tenacity import (
 )
 
 from ..constants import (
+    CEREBRAS_API_KEY,
+    CEREBRAS_BASE_URL,
+    CEREBRAS_MODEL,
     LLM_MAX_TOKENS,
     LLM_SYSTEM_PROMPT,
     LLM_TEMPERATURE,
     LLM_USER_PROMPT_TEMPLATE,
-    OPENAI_API_KEY,
-    OPENAI_MODEL,
 )
 from ..utils.logging import logger
 
@@ -33,15 +34,18 @@ class LLMAnalysisError(Exception):
 
 
 class LLMClient:
-    """Client for drug interaction analysis using OpenAI."""
+    """Client for drug interaction analysis using Cerebras."""
 
     def __init__(self):
         """Initialize the LLM client with API keys from constants."""
-        if OPENAI_API_KEY:
-            self.openai_client = openai.AsyncOpenAI(api_key=OPENAI_API_KEY)
+        if CEREBRAS_API_KEY:
+            self.openai_client = openai.AsyncOpenAI(
+                api_key=CEREBRAS_API_KEY,
+                base_url=CEREBRAS_BASE_URL,
+            )
         else:
             self.openai_client = None
-            logger.warning("OPENAI_API_KEY not found in environment")
+            logger.warning("CEREBRAS_API_KEY not found in environment")
 
     async def __aenter__(self):
         """Enter the async context manager."""
@@ -66,15 +70,15 @@ class LLMClient:
         retry=retry_if_exception_type((openai.APITimeoutError, openai.RateLimitError)),
     )
     async def _call_openai_gpt4(self, prompt: str) -> str:
-        """Call OpenAI for drug interaction analysis."""
+        """Call Cerebras for drug interaction analysis."""
         if not self.openai_client:
-            raise LLMAnalysisError("OpenAI API key not provided", "openai")
+            raise LLMAnalysisError("Cerebras API key not provided", "cerebras")
 
-        logger.info("Calling OpenAI for drug interaction analysis...")
+        logger.info("Calling Cerebras for drug interaction analysis...")
 
         try:
             response = await self.openai_client.chat.completions.create(
-                model=OPENAI_MODEL,
+                model=CEREBRAS_MODEL,
                 messages=[
                     {
                         "role": "system",
@@ -84,37 +88,38 @@ class LLMClient:
                 ],
                 max_tokens=LLM_MAX_TOKENS,
                 temperature=LLM_TEMPERATURE,
+                reasoning_effort="low",
             )
 
             content = response.choices[0].message.content
-            logger.info("OpenAI analysis completed successfully")
+            logger.info("Cerebras analysis completed successfully")
             return content
 
         except openai.APIError as e:
-            logger.error(f"OpenAI API error: {e}")
-            raise LLMAnalysisError(f"OpenAI API failed: {e}", "openai") from e
+            logger.error(f"Cerebras API error: {e}")
+            raise LLMAnalysisError(f"Cerebras API failed: {e}", "cerebras") from e
         except Exception as e:
-            logger.error(f"OpenAI request failed: {e}")
-            raise LLMAnalysisError(f"OpenAI request failed: {e}", "openai") from e
+            logger.error(f"Cerebras request failed: {e}")
+            raise LLMAnalysisError(f"Cerebras request failed: {e}", "cerebras") from e
 
     async def analyze_drug_interactions(
         self, rxnorm_json: dict, ddinter_json: dict, openfda_json: dict
     ) -> dict[str, Any]:
-        """Analyze drug interactions using OpenAI."""
+        """Analyze drug interactions using Cerebras."""
         prompt = self._create_analysis_prompt(rxnorm_json, ddinter_json, openfda_json)
 
         if not self.openai_client:
-            raise LLMAnalysisError("OpenAI API key not provided", "openai")
+            raise LLMAnalysisError("Cerebras API key not provided", "cerebras")
 
         try:
             analysis = await self._call_openai_gpt4(prompt)
             return {
                 "analysis": analysis,
-                "provider": "openai",
+                "provider": "cerebras",
                 "status": "success",
             }
         except LLMAnalysisError as e:
-            logger.error(f"OpenAI analysis failed: {e}")
+            logger.error(f"Cerebras analysis failed: {e}")
             raise
 
 

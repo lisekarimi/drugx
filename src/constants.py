@@ -33,7 +33,8 @@ ATC_CATEGORIES = {
 
 # ==================== LLM CONFIGURATION ====================
 # Model names
-OPENAI_MODEL = "gpt-4o-mini"
+CEREBRAS_MODEL = "gpt-oss-120b"
+CEREBRAS_BASE_URL = "https://api.cerebras.ai/v1"
 
 # LLM parameters
 LLM_MAX_TOKENS = 2000
@@ -41,7 +42,7 @@ LLM_TEMPERATURE = 0.1  # Low temperature for consistent, factual responses
 LLM_TIMEOUT = 60.0  # Timeout in seconds
 
 # API Keys (from environment)
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+CEREBRAS_API_KEY = os.getenv("CEREBRAS_API_KEY")
 
 # ==================== LLM PROMPTS ====================
 LLM_SYSTEM_PROMPT = "You are a clinical pharmacology expert specializing in drug interaction analysis and medication safety. Provide evidence-based, cautious analysis while always emphasizing the need for professional medical consultation."
@@ -65,12 +66,9 @@ LLM_USER_PROMPT_TEMPLATE = """Analyze these drug interaction data sources and pr
 1. **Drug Summary** 2. **Interaction Analysis** 3. **Real-World Data** 4. **Clinical Recommendations** 5. **Limitations**
 
 **KEY RULES:**
-- Simple Summary: Use everyday language, under 50 words total, focus on actions
-- Detailed Analysis: Medical terms OK, comprehensive technical information
-- Be specific to these exact drugs and their interaction data
-- Avoid generic advice like "consult your doctor" - explain WHY they should consult
-- Reference actual findings (e.g., "moderate bleeding risk found" not "may interact")
-- When analyzing multiple drugs, address ALL pairwise interactions found
-- For 3+ drug combinations, assess cumulative risk from multiple interactions
-- Don't focus only on the highest severity interaction - explain the overall combination safety
+- Stick strictly to the provided data — no outside knowledge or assumptions
+- If a source has no results, say so; never fill gaps from general knowledge
+- Bottom Line: plain language, under 50 words, action-focused
+- Detailed Analysis: cite actual findings, not generic statements
+- Cover ALL pairwise interactions and overall combination risk
 """

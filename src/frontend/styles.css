@@ -608,6 +608,52 @@ hr {
   color: var(--neutral-100) !important;
 }
 
+/* Table styling */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  border-radius: var(--border-radius-md) !important;
+  overflow: hidden !important;
+  margin: var(--spacing-md) 0 !important;
+  font-size: 0.875rem !important;
+}
+
+thead tr {
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%) !important;
+}
+
+th {
+  padding: 0.75rem 1rem !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  color: var(--neutral-50) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+  letter-spacing: 0.03em !important;
+}
+
+td {
+  padding: 0.65rem 1rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: var(--neutral-200) !important;
+  vertical-align: top !important;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.01) !important;
+}
+
+tbody tr:hover {
+  background: rgba(37, 99, 235, 0.1) !important;
+}
+
+tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px !important;
